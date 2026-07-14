@@ -1,0 +1,192 @@
+// DocoFied database schema
+// For production, switch the datasource provider below to "postgresql"
+// and set DATABASE_URL to your Postgres connection string. No model
+// changes are required to make that switch.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Provider {
+  id                   String   @id @default(cuid())
+  npi                  String?  @unique
+  firstName            String
+  lastName             String
+  orgName              String?
+  credentials          String? // e.g. "MD", "DO", "NP"
+  specialty            String
+  subSpecialty         String?
+  phone                String?
+  email                String?
+  website              String?
+  addressLine1         String?
+  addressLine2         String?
+  city                 String
+  state                String // 2-letter
+  zip                  String?
+  gender               String?
+  languages            String? // comma-separated
+  acceptingNewPatients Boolean  @default(true)
+  bio                  String?
+  photoUrl             String?
+  ratingAvg            Float    @default(0)
+  ratingCount          Int      @default(0)
+  nextAvailable        DateTime?
+  active               Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  reviews             Review[]
+  insurancePlans      ProviderInsurance[]
+  availabilitySlots   AvailabilitySlot[]
+  appointments        Appointment[]
+  providerUser        ProviderUser?
+  pageViews           PageView[]
+
+  @@index([specialty])
+  @@index([state])
+  @@index([city])
+  @@index([lastName])
+}
+
+model Review {
+  id           String   @id @default(cuid())
+  providerId   String
+  provider     Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  patientName  String
+  rating       Int // 1-5
+  comment      String?
+  verified     Boolean  @default(false)
+  status       String   @default("pending") // pending | approved | rejected
+  createdAt    DateTime @default(now())
+
+  @@index([providerId])
+  @@index([status])
+}
+
+model InsuranceCarrier {
+  id    String          @id @default(cuid())
+  name  String          @unique
+  plans InsurancePlan[]
+}
+
+model InsurancePlan {
+  id        String   @id @default(cuid())
+  carrierId String
+  carrier   InsuranceCarrier @relation(fields: [carrierId], references: [id], onDelete: Cascade)
+  name      String
+
+  providers ProviderInsurance[]
+
+  @@index([carrierId])
+}
+
+model ProviderInsurance {
+  id         String        @id @default(cuid())
+  providerId String
+  provider   Provider      @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  planId     String
+  plan       InsurancePlan @relation(fields: [planId], references: [id], onDelete: Cascade)
+
+  @@unique([providerId, planId])
+  @@index([providerId])
+  @@index([planId])
+}
+
+model AvailabilitySlot {
+  id          String   @id @default(cuid())
+  providerId  String
+  provider    Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  startsAt    DateTime
+  durationMin Int
+  visitType   String // inPerson | video
+  booked      Boolean  @default(false)
+
+  appointment Appointment?
+
+  @@index([providerId])
+  @@index([startsAt])
+}
+
+model Appointment {
+  id            String            @id @default(cuid())
+  providerId    String
+  provider      Provider          @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  slotId        String?           @unique
+  slot          AvailabilitySlot? @relation(fields: [slotId], references: [id])
+  patientId     String?
+  patient       Patient?          @relation(fields: [patientId], references: [id])
+  patientName   String
+  patientEmail  String
+  patientPhone  String?
+  reason        String?
+  visitType     String // inPerson | video
+  status        String            @default("booked") // booked | cancelled | completed
+  createdAt     DateTime          @default(now())
+
+  @@index([providerId])
+  @@index([patientId])
+}
+
+model Patient {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  firstName    String
+  lastName     String
+  phone        String?
+  createdAt    DateTime @default(now())
+
+  appointments Appointment[]
+}
+
+model ProviderUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  providerId   String   @unique
+  provider     Provider @relation(fields: [providerId], references: [id], onDelete: Cascade)
+  createdAt    DateTime @default(now())
+}
+
+model AdminUser {
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+}
+
+model Setting {
+  key   String @id
+  value String
+}
+
+model PageView {
+  id         String    @id @default(cuid())
+  path       String
+  providerId String?
+  provider   Provider? @relation(fields: [providerId], references: [id], onDelete: SetNull)
+  referrer   String?
+  createdAt  DateTime  @default(now())
+
+  @@index([createdAt])
+  @@index([providerId])
+}
+
+model SearchLog {
+  id            String   @id @default(cuid())
+  query         String?
+  specialty     String?
+  state         String?
+  city          String?
+  insurance     String?
+  resultsCount  Int
+  createdAt     DateTime @default(now())
+
+  @@index([createdAt])
+}
