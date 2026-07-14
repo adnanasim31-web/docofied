@@ -72,12 +72,22 @@ for the admin panel (log in with `ADMIN_EMAIL` / `ADMIN_PASSWORD`).
 
 | Script          | Description                                             |
 | --------------- | -------------------------------------------------------- |
-| `npm run dev`   | Start the Next.js dev server                              |
+| `npm run dev`   | Push the schema, then start the Next.js dev server         |
 | `npm run build` | `prisma generate && next build` — production build        |
-| `npm run start` | Start the production server (after `build`)                |
+| `npm run start` | Push the schema, then start the production server (after `build`) |
 | `npm run db:push` | Push the Prisma schema to the database                  |
 | `npm run db:seed` | Seed the database with sample data                       |
 | `npm run setup` | Generate client, push schema, and seed — first-time setup |
+
+`dev` and `start` both run `prisma db push` first so the database schema always
+exists before the server starts serving requests — even if `npm run setup` was
+never run. This is a safety net for platforms that only run `npm run build` /
+`npm start` automatically: without it, every page would 500 with
+`The table 'main.Provider' does not exist in the current database` (or the
+equivalent generic "Application error: a server-side exception has occurred"
+in production) because the SQLite file is empty on a fresh checkout. `db push`
+only creates/updates schema — it never seeds data, so run `npm run db:seed`
+separately if you want the sample providers.
 
 ## Project structure
 
