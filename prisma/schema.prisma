@@ -1,14 +1,15 @@
 // DocoFied database schema
-// For production, switch the datasource provider below to "postgresql"
-// and set DATABASE_URL to your Postgres connection string. No model
-// changes are required to make that switch.
+// Running on PostgreSQL (e.g. Vercel Postgres / Neon) — set DATABASE_URL to
+// your Postgres connection string. To develop against SQLite locally instead,
+// switch `provider` below back to "sqlite" and point DATABASE_URL at a local
+// file. No model changes are required either way.
 
 generator client {
   provider = "prisma-client-js"
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 

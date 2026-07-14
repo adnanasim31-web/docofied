@@ -14,7 +14,8 @@ later without a schema migration.
 
 - **Next.js 14** (App Router) + TypeScript
 - **Tailwind CSS** for styling
-- **Prisma ORM** with **SQLite** for local dev (one-line swap to PostgreSQL for prod)
+- **Prisma ORM** on **PostgreSQL** (e.g. Vercel Postgres / Neon) — swap back to
+  SQLite for offline local dev with a one-line datasource change
 - **Recharts** for admin dashboard charts
 - **bcryptjs** for admin password hashing
 - **papaparse** for CSV bulk import
@@ -29,11 +30,10 @@ npm install
 
 ### 2. Configure environment variables
 
-Copy `.env.example` to `.env` (a working `.env` is already included for local dev)
-and adjust as needed:
+Copy `.env.example` to `.env` and fill in a real `DATABASE_URL`:
 
 ```bash
-DATABASE_URL="file:./dev.db"
+DATABASE_URL="postgresql://user:password@host:5432/dbname"
 ADMIN_EMAIL="admin@docofied.com"
 ADMIN_PASSWORD="ChangeMe123!"
 SESSION_SECRET="a-long-random-string"
@@ -43,9 +43,15 @@ SESSION_SECRET="a-long-random-string"
 `SESSION_SECRET` signs the admin login cookie — use a long, random value in
 production.
 
+The schema ships configured for PostgreSQL (what Vercel Postgres / Neon /
+Supabase all speak). If you'd rather develop locally without a Postgres
+instance, switch `provider = "postgresql"` back to `provider = "sqlite"` in
+`prisma/schema.prisma` and point `DATABASE_URL` at a local file
+(`file:./dev.db`) — no model changes are needed either way.
+
 ### 3. Set up the database
 
-Runs Prisma client generation, pushes the schema to SQLite, and seeds sample data
+Runs Prisma client generation, pushes the schema, and seeds sample data
 (admin user, ~100 providers, insurance carriers/plans, sample reviews):
 
 ```bash
@@ -74,6 +80,7 @@ for the admin panel (log in with `ADMIN_EMAIL` / `ADMIN_PASSWORD`).
 | --------------- | -------------------------------------------------------- |
 | `npm run dev`   | Push the schema, then start the Next.js dev server         |
 | `npm run build` | `prisma generate && next build` — production build        |
+| `npm run vercel-build` | Push the schema, then build — used automatically by Vercel |
 | `npm run start` | Push the schema, then start the production server (after `build`) |
 | `npm run db:push` | Push the Prisma schema to the database                  |
 | `npm run db:seed` | Seed the database with sample data                       |
@@ -81,13 +88,22 @@ for the admin panel (log in with `ADMIN_EMAIL` / `ADMIN_PASSWORD`).
 
 `dev` and `start` both run `prisma db push` first so the database schema always
 exists before the server starts serving requests — even if `npm run setup` was
-never run. This is a safety net for platforms that only run `npm run build` /
-`npm start` automatically: without it, every page would 500 with
-`The table 'main.Provider' does not exist in the current database` (or the
-equivalent generic "Application error: a server-side exception has occurred"
-in production) because the SQLite file is empty on a fresh checkout. `db push`
-only creates/updates schema — it never seeds data, so run `npm run db:seed`
-separately if you want the sample providers.
+never run. Without it, every page would 500 with `The table 'Provider' does
+not exist in the current database` (surfaced generically in production as
+"Application error: a server-side exception has occurred") on any fresh
+database. `db push` only creates/updates schema — it never seeds data, so run
+`npm run db:seed` separately if you want the sample providers.
+
+**Vercel note**: Vercel never runs `npm start` — it builds your app and serves
+it through its own runtime, invoking `vercel-build` instead of `build` when
+that script is present. `vercel-build` runs `prisma db push --accept-data-loss`
+so the schema is created/updated on every deploy automatically. (`--accept-data-loss`
+is required for a non-interactive CI build; for a real production system with
+data you care about, switch to `prisma migrate deploy` with committed
+migrations instead of `db push`.) Seeding is not run automatically on
+Vercel — run `npm run db:seed` locally with `DATABASE_URL` pointed at your
+production database (e.g. after `vercel env pull`) if you want the sample
+data there.
 
 ## Project structure
 
@@ -115,18 +131,18 @@ src/
 
 ## Database schema
 
-The Prisma schema (`prisma/schema.prisma`) is written for SQLite locally, with a
-one-line change to switch to PostgreSQL for production:
+The Prisma schema (`prisma/schema.prisma`) runs on PostgreSQL by default, with a
+one-line change to switch to SQLite for offline local dev:
 
 ```prisma
 datasource db {
-  provider = "postgresql"  // was "sqlite"
-  url      = env("DATABASE_URL")
+  provider = "sqlite"  // was "postgresql"
+  url      = env("DATABASE_URL")  // e.g. "file:./dev.db"
 }
 ```
 
-No model changes are required — just point `DATABASE_URL` at your Postgres
-instance and run `npx prisma db push` (or migrate) again.
+No model changes are required either way — just match `DATABASE_URL` to
+whichever provider is set and run `npx prisma db push` (or migrate) again.
 
 Models cover the current feature set (`Provider`, `Review`, `InsuranceCarrier`,
 `InsurancePlan`, `ProviderInsurance`, `Setting`, `PageView`, `SearchLog`) as well
@@ -156,20 +172,37 @@ re-migration.
 
 ## Deployment
 
-1. Provision a PostgreSQL database and update `datasource db` in
-   `prisma/schema.prisma` to `provider = "postgresql"`.
+### Vercel
+
+1. Provision a Postgres database (Vercel's Storage tab → Postgres/Neon
+   integration is the easiest path — it sets `DATABASE_URL` for you) and
+   connect it to the project for the Production and Preview environments.
+2. In Project Settings → Environment Variables, also set `ADMIN_EMAIL`,
+   `ADMIN_PASSWORD`, and a strong random `SESSION_SECRET`.
+3. Deploy. Vercel automatically runs `vercel-build`
+   (`prisma generate && prisma db push --accept-data-loss && next build`)
+   instead of `build`, so the schema is created on the very first deploy —
+   no manual `db push` step needed.
+4. The database will be empty after that first deploy (schema only, no data).
+   To load the sample providers, pull the production env vars locally and run
+   the seed script against that database:
+   ```bash
+   vercel env pull .env.production.local
+   DATABASE_URL="$(grep DATABASE_URL .env.production.local | cut -d '=' -f2- | tr -d '"')" npm run db:seed
+   ```
+
+### Other hosts (a plain Node server, Railway, Render, etc.)
+
+1. Provision a PostgreSQL database.
 2. Set `DATABASE_URL`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, and a strong
    `SESSION_SECRET` in your hosting provider's environment variables.
-3. Run `npx prisma db push` (or set up migrations) against the production
-   database, then `npm run db:seed` if you want the sample data.
-4. Build and start:
+3. Build and start:
    ```bash
    npm run build
    npm run start
    ```
-   On platforms like Vercel, `npm run build` (which runs `prisma generate` first)
-   is invoked automatically — just make sure the environment variables above are
-   configured before the first deploy.
+   `start` runs `prisma db push` before booting, so the schema is created
+   automatically; run `npm run db:seed` separately if you want sample data.
 
 ## What's next
 
