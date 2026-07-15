@@ -29,7 +29,7 @@ export function StarRating({
         {Array.from({ length: 5 }).map((_, i) => (
           <StarIcon
             key={i}
-            className={`${starSize} ${i < Math.round(rating) ? "text-amber-400" : "text-line"}`}
+            className={`${starSize} ${i < Math.round(rating) ? "text-accent-600" : "text-line"}`}
             filled={i < Math.round(rating)}
           />
         ))}

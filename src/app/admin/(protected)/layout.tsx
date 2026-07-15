@@ -21,11 +21,11 @@ export default function AdminProtectedLayout({ children }: { children: React.Rea
     <div className="flex min-h-screen bg-surface-sunk">
       <aside className="hidden w-60 shrink-0 border-r border-line bg-white sm:block">
         <div className="flex h-16 items-center gap-2 border-b border-line px-5">
-          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-500 text-sm font-bold text-white">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand text-sm font-bold text-white">
             D
           </span>
           <span className="font-display text-base font-bold text-ink">
-            Doco<span className="text-brand-500">Fied</span>
+            Doco<span className="text-accent-600">Fied</span>
           </span>
         </div>
         <nav className="flex flex-col gap-1 p-4">
@@ -33,7 +33,7 @@ export default function AdminProtectedLayout({ children }: { children: React.Rea
             <Link
               key={item.href}
               href={item.href}
-              className="rounded-lg px-3 py-2 text-sm font-medium text-ink-muted hover:bg-brand-50 hover:text-brand-700"
+              className="rounded-lg px-3 py-2 text-sm font-medium text-ink-muted hover:bg-accent-tint hover:text-brand"
             >
               {item.label}
             </Link>
@@ -52,7 +52,7 @@ export default function AdminProtectedLayout({ children }: { children: React.Rea
         <header className="flex h-16 items-center justify-between border-b border-line bg-white px-6 sm:hidden">
           <span className="font-display text-base font-bold text-ink">DocoFied Admin</span>
           <form action={logoutAction}>
-            <button type="submit" className="text-sm font-semibold text-brand-600">
+            <button type="submit" className="text-sm font-semibold text-accent-600">
               Sign out
             </button>
           </form>

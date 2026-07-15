@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { Search, MapPin, ShieldCheck, ArrowRight } from "lucide-react";
 
 export function SearchBar({
   insuranceOptions,
@@ -27,10 +28,10 @@ export function SearchBar({
   return (
     <form
       onSubmit={handleSubmit}
-      className="flex w-full flex-col gap-2 rounded-card-lg border border-line bg-white p-2 shadow-lift sm:flex-row sm:items-stretch sm:gap-0 sm:rounded-full sm:p-2"
+      className="flex w-full flex-col gap-2 rounded-card-lg bg-white p-2 shadow-lift sm:flex-row sm:items-stretch sm:gap-0 sm:rounded-full sm:p-2"
     >
       <div className="flex flex-1 items-center gap-2 rounded-xl px-3 py-2 sm:border-r sm:border-line">
-        <SearchIcon className="h-5 w-5 shrink-0 text-brand-500" />
+        <Search className="h-5 w-5 shrink-0 text-accent-600" />
         <input
           type="text"
           value={q}
@@ -40,7 +41,7 @@ export function SearchBar({
         />
       </div>
       <div className="flex flex-1 items-center gap-2 rounded-xl px-3 py-2 sm:border-r sm:border-line">
-        <PinIcon className="h-5 w-5 shrink-0 text-brand-500" />
+        <MapPin className="h-5 w-5 shrink-0 text-accent-600" />
         <input
           type="text"
           value={location}
@@ -50,7 +51,7 @@ export function SearchBar({
         />
       </div>
       <div className="flex flex-1 items-center gap-2 rounded-xl px-3 py-2">
-        <ShieldIcon className="h-5 w-5 shrink-0 text-brand-500" />
+        <ShieldCheck className="h-5 w-5 shrink-0 text-accent-600" />
         <select
           value={insurance}
           onChange={(e) => setInsurance(e.target.value)}
@@ -66,33 +67,8 @@ export function SearchBar({
       </div>
       <button type="submit" className="btn-primary shrink-0 px-6 py-3 sm:ml-1">
         Find care
+        <ArrowRight className="h-4 w-4" />
       </button>
     </form>
-  );
-}
-
-function SearchIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className={className}>
-      <circle cx="11" cy="11" r="7" />
-      <path d="M21 21l-4.3-4.3" />
-    </svg>
-  );
-}
-
-function PinIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className={className}>
-      <path d="M12 21s-7-6.5-7-11.5a7 7 0 1 1 14 0C19 14.5 12 21 12 21z" />
-      <circle cx="12" cy="9.5" r="2.5" />
-    </svg>
-  );
-}
-
-function ShieldIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className={className}>
-      <path d="M12 3l7 3v5c0 4.5-3 8-7 9-4-1-7-4.5-7-9V6l7-3z" />
-    </svg>
   );
 }

@@ -25,7 +25,7 @@ export default async function AdminSettingsPage({
       </p>
 
       {searchParams.saved && (
-        <div className="mt-4 max-w-xl rounded-xl border border-brand-200 bg-brand-50 px-4 py-2 text-sm text-brand-700">
+        <div className="mt-4 max-w-xl rounded-xl border border-accent-100 bg-accent-tint px-4 py-2 text-sm text-brand">
           Settings saved.
         </div>
       )}

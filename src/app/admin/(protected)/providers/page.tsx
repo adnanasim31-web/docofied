@@ -107,7 +107,7 @@ export default async function AdminProvidersPage({
                 </td>
                 <td className="px-4 py-3 text-right">
                   <div className="flex items-center justify-end gap-4">
-                    <Link href={`/admin/providers/${p.id}/edit`} className="text-sm font-semibold text-brand-600 hover:text-brand-700">
+                    <Link href={`/admin/providers/${p.id}/edit`} className="text-sm font-semibold text-accent-600 hover:text-accent-hover">
                       Edit
                     </Link>
                     <DeleteButton

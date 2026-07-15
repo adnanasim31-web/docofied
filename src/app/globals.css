@@ -8,30 +8,103 @@
 }
 
 body {
-  color: #12211f;
-  background-color: #f5f8f7;
+  color: #1e2a28;
+  background-color: #EDEDE8;
 }
 
 .container-page {
   @apply mx-auto w-full max-w-6xl px-4 sm:px-6 lg:px-8;
 }
 
+.panel {
+  @apply mx-auto max-w-6xl overflow-hidden rounded-panel;
+}
+
 .card {
-  @apply rounded-card-lg border border-line bg-surface shadow-soft;
+  @apply rounded-card-lg border border-line bg-surface shadow-soft transition-shadow duration-300;
+}
+
+.card-hover {
+  @apply hover:shadow-card hover:-translate-y-0.5 transition-all duration-300;
 }
 
 .btn-primary {
-  @apply inline-flex items-center justify-center rounded-full bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-600 disabled:cursor-not-allowed disabled:opacity-60;
+  @apply inline-flex items-center justify-center gap-1.5 rounded-full bg-accent-gradient px-5 py-2.5 text-sm font-semibold text-white shadow-soft transition-transform duration-200 hover:-translate-y-0.5 hover:shadow-card disabled:cursor-not-allowed disabled:opacity-60 disabled:hover:translate-y-0;
 }
 
 .btn-secondary {
-  @apply inline-flex items-center justify-center rounded-full border border-line bg-white px-5 py-2.5 text-sm font-semibold text-ink transition hover:border-brand-300 hover:bg-brand-50;
+  @apply inline-flex items-center justify-center gap-1.5 rounded-full border-2 border-brand px-5 py-2.5 text-sm font-semibold text-brand transition-colors duration-200 hover:bg-brand hover:text-white disabled:cursor-not-allowed disabled:opacity-60;
+}
+
+.btn-secondary-light {
+  @apply inline-flex items-center justify-center gap-1.5 rounded-full border-2 border-white/40 px-5 py-2.5 text-sm font-semibold text-white transition-colors duration-200 hover:bg-white/10 disabled:cursor-not-allowed disabled:opacity-60;
 }
 
 .input-field {
-  @apply w-full rounded-xl border border-line bg-white px-4 py-2.5 text-sm text-ink placeholder:text-ink-faint focus:border-brand-400 focus:outline-none focus:ring-2 focus:ring-brand-100;
+  @apply w-full rounded-xl border border-line bg-white px-4 py-2.5 text-sm text-ink placeholder:text-ink-faint focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent-tint;
 }
 
 .badge {
-  @apply inline-flex items-center gap-1 rounded-full bg-brand-50 px-2.5 py-1 text-xs font-medium text-brand-700;
+  @apply inline-flex items-center gap-1 rounded-full bg-accent-tint px-2.5 py-1 text-xs font-medium text-brand;
+}
+
+.icon-badge {
+  @apply flex shrink-0 items-center justify-center rounded-full bg-accent-tint text-brand;
+}
+
+.icon-badge-gradient {
+  @apply flex shrink-0 items-center justify-center rounded-full bg-accent-gradient text-white;
+}
+
+.icon-outline {
+  @apply flex shrink-0 items-center justify-center text-white/90;
+}
+
+.pill-card {
+  @apply flex items-center gap-3 rounded-full border border-line bg-surface-sunk py-1.5 pl-1.5 pr-5 transition-all duration-300 hover:-translate-y-0.5 hover:shadow-card;
+}
+
+.eyebrow {
+  @apply inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-widest text-accent-600;
+}
+
+.eyebrow::before {
+  content: "//";
+  @apply text-accent-600;
+}
+
+.section-heading {
+  @apply font-display text-3xl font-semibold tracking-tight text-brand sm:text-4xl;
+}
+
+.emphasis {
+  @apply text-accent-600;
+}
+
+/* Scroll reveal: hidden/offset by default, revealed via JS adding .reveal-visible
+   when the element enters the viewport. Falls back to always-visible below. */
+.reveal {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease-out, transform 0.7s ease-out;
+}
+
+.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  * {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

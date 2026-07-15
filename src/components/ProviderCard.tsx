@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { MapPin, ShieldCheck, BadgeCheck } from "lucide-react";
 import { StarRating } from "@/components/StarRating";
 import { providerPhoto } from "@/lib/constants";
 
@@ -17,11 +18,14 @@ export type ProviderCardData = {
   acceptingNewPatients: boolean;
 };
 
-const TRUST_BADGES = ["Verified", "Insurance accepted"];
+const TRUST_BADGES = [
+  { label: "Verified", icon: BadgeCheck },
+  { label: "Insurance accepted", icon: ShieldCheck },
+];
 
 export function ProviderCard({ provider }: { provider: ProviderCardData }) {
   return (
-    <div className="card flex flex-col gap-4 p-5 transition hover:shadow-card sm:flex-row sm:items-start">
+    <div className="card card-hover flex flex-col gap-4 p-5 sm:flex-row sm:items-start">
       <div className="flex shrink-0 justify-center sm:justify-start">
         <div className="relative h-20 w-20 overflow-hidden rounded-full border border-line bg-surface-sunk">
           <Image
@@ -41,7 +45,7 @@ export function ProviderCard({ provider }: { provider: ProviderCardData }) {
               {provider.firstName} {provider.lastName}
               {provider.credentials ? `, ${provider.credentials}` : ""}
             </h3>
-            <p className="text-sm font-medium text-brand-600">{provider.specialty}</p>
+            <p className="text-sm font-medium text-accent-600">{provider.specialty}</p>
           </div>
           {provider.acceptingNewPatients && (
             <span className="badge">Accepting new patients</span>
@@ -53,16 +57,17 @@ export function ProviderCard({ provider }: { provider: ProviderCardData }) {
         </div>
 
         <div className="mt-2 flex items-center gap-1.5 text-sm text-ink-muted">
-          <PinIcon className="h-4 w-4 text-ink-faint" />
+          <MapPin className="h-4 w-4 text-ink-faint" />
           <span>
             {provider.city}, {provider.state}
           </span>
         </div>
 
         <div className="mt-3 flex flex-wrap gap-2">
-          {TRUST_BADGES.map((badge) => (
-            <span key={badge} className="badge">
-              {badge}
+          {TRUST_BADGES.map(({ label, icon: Icon }) => (
+            <span key={label} className="badge">
+              <Icon className="h-3.5 w-3.5" />
+              {label}
             </span>
           ))}
         </div>
@@ -74,14 +79,5 @@ export function ProviderCard({ provider }: { provider: ProviderCardData }) {
         </Link>
       </div>
     </div>
-  );
-}
-
-function PinIcon({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.8} className={className}>
-      <path d="M12 21s-7-6.5-7-11.5a7 7 0 1 1 14 0C19 14.5 12 21 12 21z" />
-      <circle cx="12" cy="9.5" r="2.5" />
-    </svg>
   );
 }
