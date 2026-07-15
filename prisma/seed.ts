@@ -115,8 +115,8 @@ async function main() {
   console.log("Seeding DocoFied database...");
 
   // --- Admin user ---
-  const adminEmail = process.env.ADMIN_EMAIL ?? "admin@docofied.com";
-  const adminPassword = process.env.ADMIN_PASSWORD ?? "ChangeMe123!";
+  const adminEmail = (process.env.ADMIN_EMAIL ?? "admin@docofied.com").trim().toLowerCase();
+  const adminPassword = (process.env.ADMIN_PASSWORD ?? "ChangeMe123!").trim();
   const adminPasswordHash = await bcrypt.hash(adminPassword, 10);
   await prisma.adminUser.upsert({
     where: { email: adminEmail },
