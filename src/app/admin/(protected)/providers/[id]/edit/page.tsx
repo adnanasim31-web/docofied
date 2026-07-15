@@ -23,7 +23,7 @@ export default async function EditProviderPage({
       </p>
 
       {(searchParams.created || searchParams.saved) && (
-        <div className="mt-4 max-w-3xl rounded-xl border border-brand-200 bg-brand-50 px-4 py-2 text-sm text-brand-700">
+        <div className="mt-4 max-w-3xl rounded-xl border border-accent-100 bg-accent-tint px-4 py-2 text-sm text-brand">
           {searchParams.created ? "Provider created successfully." : "Changes saved."}
         </div>
       )}

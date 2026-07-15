@@ -66,7 +66,8 @@ export default async function ProviderProfilePage({ params }: { params: { id: st
   );
 
   return (
-    <div className="container-page py-10">
+    <div className="py-6 sm:py-10">
+    <div className="container-page">
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-3">
         <div className="lg:col-span-2">
           <div className="card p-6 sm:p-8">
@@ -85,7 +86,7 @@ export default async function ProviderProfilePage({ params }: { params: { id: st
                   {provider.firstName} {provider.lastName}
                   {provider.credentials ? `, ${provider.credentials}` : ""}
                 </h1>
-                <p className="mt-1 text-base font-medium text-brand-600">{provider.specialty}</p>
+                <p className="mt-1 text-base font-medium text-accent-600">{provider.specialty}</p>
                 <div className="mt-2">
                   <StarRating rating={provider.ratingAvg} count={provider.ratingCount} size="md" />
                 </div>
@@ -155,7 +156,7 @@ export default async function ProviderProfilePage({ params }: { params: { id: st
                   href={mapsUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="mt-1 inline-block text-sm font-semibold text-brand-600 hover:text-brand-700"
+                  className="mt-1 inline-block text-sm font-semibold text-accent-600 hover:text-accent-hover"
                 >
                   Get directions &rarr;
                 </a>
@@ -173,7 +174,7 @@ export default async function ProviderProfilePage({ params }: { params: { id: st
                     href={provider.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-brand-600 hover:text-brand-700"
+                    className="text-accent-600 hover:text-accent-hover"
                   >
                     {provider.website}
                   </a>
@@ -196,6 +197,7 @@ export default async function ProviderProfilePage({ params }: { params: { id: st
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 }

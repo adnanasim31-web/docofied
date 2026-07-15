@@ -15,7 +15,7 @@ export default function AdminLoginPage({
     <div className="flex min-h-[70vh] items-center justify-center bg-surface-sunk px-4 py-16">
       <div className="card w-full max-w-sm p-8">
         <div className="mb-6 text-center">
-          <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-brand-500 text-lg font-bold text-white">
+          <span className="mx-auto flex h-10 w-10 items-center justify-center rounded-xl bg-brand text-lg font-bold text-white">
             D
           </span>
           <h1 className="mt-3 font-display text-xl font-bold text-ink">DocoFied Admin</h1>

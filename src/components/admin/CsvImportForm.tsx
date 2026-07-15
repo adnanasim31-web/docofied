@@ -54,7 +54,7 @@ export function CsvImportForm() {
             type="file"
             accept=".csv,text/csv"
             onChange={handleFileChange}
-            className="block w-full text-sm text-ink file:mr-4 file:rounded-full file:border-0 file:bg-brand-500 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-brand-600"
+            className="block w-full text-sm text-ink file:mr-4 file:rounded-full file:border-0 file:bg-accent file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-accent-hover"
           />
           {fileName && <p className="mt-2 text-xs text-ink-muted">Selected: {fileName}</p>}
         </div>
@@ -97,7 +97,7 @@ export function CsvImportForm() {
 function ResultStat({ label, value }: { label: string; value: number }) {
   return (
     <div className="rounded-lg bg-white p-3 text-center">
-      <p className="font-display text-xl font-bold text-brand-600">{value}</p>
+      <p className="font-display text-xl font-bold text-accent-600">{value}</p>
       <p className="text-xs text-ink-muted">{label}</p>
     </div>
   );

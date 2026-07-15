@@ -122,9 +122,13 @@ export default async function SearchPage({
   }
 
   return (
-    <div className="container-page py-10">
-      <h1 className="font-display text-3xl font-bold text-ink">Find a doctor</h1>
-      <p className="mt-1 text-sm text-ink-muted">
+    <div className="px-4 py-6 sm:px-6 sm:py-8 lg:px-8">
+    <div className="panel bg-white p-6 sm:p-10">
+      <span className="eyebrow">Search</span>
+      <h1 className="mt-3 section-heading">
+        Find a <span className="emphasis">doctor</span>
+      </h1>
+      <p className="mt-2 text-sm text-ink-muted">
         {totalCount.toLocaleString()} provider{totalCount === 1 ? "" : "s"} found
         {specialty ? ` for ${specialty}` : ""}
         {city ? ` near ${city}` : ""}
@@ -170,6 +174,7 @@ export default async function SearchPage({
           </Link>
         </div>
       )}
+    </div>
     </div>
   );
 }

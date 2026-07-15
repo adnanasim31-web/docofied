@@ -6,43 +6,60 @@ const config: Config = {
     extend: {
       colors: {
         brand: {
-          50: "#eaf6f5",
-          100: "#cfe9e7",
-          200: "#a3d6d1",
-          300: "#72beb7",
-          400: "#469f97",
-          500: "#0f766e",
-          600: "#0c5f59",
-          700: "#0a4a50",
-          800: "#083a3f",
-          900: "#062b2f",
+          DEFAULT: "#123B33",
+          light: "#1C4A40",
+          dark: "#0E2E2A",
+        },
+        accent: {
+          50: "#E8F5EC",
+          100: "#cdead9",
+          400: "#3DBE6B",
+          500: "#3DBE6B",
+          600: "#2FA65A",
+          DEFAULT: "#3DBE6B",
+          hover: "#2FA65A",
+          tint: "#E8F5EC",
         },
         ink: {
-          DEFAULT: "#12211f",
-          muted: "#5b6b69",
-          faint: "#8a9997",
+          DEFAULT: "#1E2A28",
+          muted: "#4d5c59",
+          faint: "#7c8c89",
+        },
+        mint: {
+          DEFAULT: "#CDE8D8",
         },
         surface: {
           DEFAULT: "#ffffff",
-          sunk: "#f5f8f7",
+          sunk: "#F4F7F5",
+          page: "#EDEDE8",
         },
-        line: "#e3ebe9",
-        accent: {
-          DEFAULT: "#2f9e7e",
-        },
+        line: "#E2ECE7",
       },
       fontFamily: {
         display: ["var(--font-bricolage)", "sans-serif"],
         sans: ["var(--font-inter)", "sans-serif"],
       },
       borderRadius: {
-        card: "14px",
+        card: "16px",
         "card-lg": "20px",
+        panel: "28px",
+      },
+      backgroundImage: {
+        "accent-gradient": "linear-gradient(135deg, #1E7A6A 0%, #3DBE6B 100%)",
       },
       boxShadow: {
-        soft: "0 2px 8px rgba(18, 33, 31, 0.06), 0 1px 2px rgba(18, 33, 31, 0.04)",
-        card: "0 4px 16px rgba(18, 33, 31, 0.08)",
-        lift: "0 12px 32px rgba(18, 33, 31, 0.12)",
+        soft: "0 2px 10px rgba(18, 40, 34, 0.06), 0 1px 2px rgba(18, 40, 34, 0.04)",
+        card: "0 8px 24px rgba(18, 40, 34, 0.08)",
+        lift: "0 16px 40px rgba(18, 40, 34, 0.14)",
+      },
+      keyframes: {
+        "fade-in-up": {
+          "0%": { opacity: "0", transform: "translateY(16px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+      },
+      animation: {
+        "fade-in-up": "fade-in-up 0.6s ease-out forwards",
       },
     },
   },

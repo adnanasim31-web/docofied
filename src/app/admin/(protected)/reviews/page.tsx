@@ -48,7 +48,7 @@ export default async function AdminReviewsPage({
             href={`/admin/reviews?status=${tab.key}`}
             className={`rounded-t-lg px-4 py-2 text-sm font-medium ${
               status === tab.key
-                ? "border-b-2 border-brand-500 text-brand-600"
+                ? "border-b-2 border-accent-600 text-accent-600"
                 : "text-ink-muted hover:text-ink"
             }`}
           >
@@ -68,7 +68,7 @@ export default async function AdminReviewsPage({
                 <p className="text-sm font-semibold text-ink">{review.patientName}</p>
                 <Link
                   href={`/provider/${review.provider.id}`}
-                  className="text-xs text-brand-600 hover:text-brand-700"
+                  className="text-xs text-accent-600 hover:text-accent-hover"
                   target="_blank"
                 >
                   {review.provider.firstName} {review.provider.lastName} &middot; {review.provider.specialty}
